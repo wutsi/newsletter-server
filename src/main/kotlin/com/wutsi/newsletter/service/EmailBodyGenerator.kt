@@ -14,8 +14,8 @@ import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service
 import java.io.InputStreamReader
 import java.io.StringWriter
-import java.time.OffsetDateTime
-import java.time.format.DateTimeFormatter
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 @Service
@@ -72,8 +72,8 @@ class EmailBodyGenerator(
         )
     }
 
-    private fun formatMediumDate(date: OffsetDateTime, locale: Locale): String =
-        date.format(DateTimeFormatter.ofPattern("d MMM yyyy", locale))
+    private fun formatMediumDate(date: Date, locale: Locale): String =
+        SimpleDateFormat("d MMM yyyy", locale).format(date)
 
     private fun locale(user: User): Locale =
         if (user.language.isNullOrEmpty()) Locale("fr") else Locale(user.language)
