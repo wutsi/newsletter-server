@@ -22,7 +22,6 @@ internal class EmailBodyGeneratorTest {
     private lateinit var filters: FilterSet
     private val messageSource: ResourceBundleMessageSource = ResourceBundleMessageSource()
     private val trackingUrl: String = "https://track.wutsi.com"
-    private val assetUrl: String = "https://assets.wutsi.com/newsletter-server"
 
     private lateinit var generator: EmailBodyGenerator
 
@@ -32,7 +31,7 @@ internal class EmailBodyGeneratorTest {
 
         editorJSService = mock()
         filters = mock()
-        generator = EmailBodyGenerator(editorJSService, filters, messageSource, trackingUrl, assetUrl)
+        generator = EmailBodyGenerator(editorJSService, filters, messageSource, trackingUrl)
     }
 
     @Test
@@ -66,9 +65,7 @@ internal class EmailBodyGeneratorTest {
         assertEquals("7 janv. 2020", scope["publishedDate"])
         assertEquals("Yo Man", scope["content"])
         assertEquals("https://www.wutsi.com/read/77/sample-story?like=1", scope["likeUrl"])
-        assertEquals("https://assets.wutsi.com/newsletter-server/img/like.png", scope["likeIconUrl"])
         assertEquals("https://www.wutsi.com/read/77/sample-story?comment=1", scope["commentUrl"])
-        assertEquals("https://assets.wutsi.com/newsletter-server/img/comment.png", scope["commentIconUrl"])
         assertEquals("https://www.wutsi.com/read/77/sample-story?share=1", scope["shareUrl"])
         assertEquals(
             "Si tu as aim&eacute; cette Storie de <a href=\"https://www.wutsi.com/@/\">Ray Sponsible</a>, Pourquoi ne pas la partager?",

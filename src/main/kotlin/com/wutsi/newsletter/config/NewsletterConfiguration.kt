@@ -9,14 +9,11 @@ import com.wutsi.newsletter.service.filter.ImageFilter
 import com.wutsi.newsletter.service.filter.LinkToolFilter
 import com.wutsi.newsletter.service.filter.PreFilter
 import com.wutsi.newsletter.service.filter.YouTubeFilter
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class NewsletterConfiguration(
-    @Value("\${wutsi.asset-url}") private val assetUrl: String
-) {
+class NewsletterConfiguration {
     @Bean
     fun newsletterFilterSet() = FilterSet(
         filters = listOf(
@@ -25,7 +22,7 @@ class NewsletterConfiguration(
             HrFilter(),
             LinkToolFilter(),
             PreFilter(),
-            YouTubeFilter(assetUrl),
+            YouTubeFilter(),
             ButtonFilter(),
 
             // MUST BE THE LAST

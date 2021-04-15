@@ -23,8 +23,7 @@ class EmailBodyGenerator(
     @Autowired private val editorJSService: EditorJSService,
     @Autowired private val filters: FilterSet,
     @Autowired private val messageSource: MessageSource,
-    @Value("\${wutsi.tracking-url}") private val trackingUrl: String,
-    @Value("\${wutsi.asset-url}") private val assetUrl: String
+    @Value("\${wutsi.tracking-url}") private val trackingUrl: String
 ) {
     fun generate(story: Story, site: Site, user: User): String {
         val doc = editorJSService.fromJson(story.content)
@@ -62,9 +61,7 @@ class EmailBodyGenerator(
             "publishedDate" to StringEscapeUtils.escapeHtml4(formatMediumDate(story.publishedDateTime, locale)),
             "content" to content,
             "likeUrl" to "$storyUrl?like=1",
-            "likeIconUrl" to "$assetUrl/img/like.png",
             "commentUrl" to "$storyUrl?comment=1",
-            "commentIconUrl" to "$assetUrl/img/comment.png",
             "shareUrl" to "$storyUrl?share=1",
             "shareText" to messageSource.getMessage(
                 "share_text",
@@ -76,7 +73,7 @@ class EmailBodyGenerator(
     }
 
     private fun formatMediumDate(date: OffsetDateTime, locale: Locale): String =
-        date.format(DateTimeFormatter.ofPattern("d MMM uuuu", locale))
+        date.format(DateTimeFormatter.ofPattern("d MMM yyyy", locale))
 
     private fun locale(user: User): Locale =
         if (user.language.isNullOrEmpty()) Locale("fr") else Locale(user.language)

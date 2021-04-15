@@ -3,7 +3,7 @@ package com.wutsi.newsletter.service.filter
 import com.wutsi.newsletter.service.Filter
 import org.jsoup.nodes.Document
 
-class YouTubeFilter(private val assetUrl: String) : Filter {
+class YouTubeFilter : Filter {
     companion object {
         val STYLE_CONTAINER = "margin: 1em 0;"
 
@@ -25,7 +25,7 @@ class YouTubeFilter(private val assetUrl: String) : Filter {
                 val innerHtml = "<a href=\"https://www.youtube.com/watch?v=$id\">" +
                     "<img style=\"$STYLE_IMAGE\" src=\"https://img.youtube.com/vi/$id/0.jpg\">" +
                     "<div style=\"$STYLE_CONTROLS\">" +
-                    "<img width=\"32\" height=\"32\" src=\"$assetUrl/img/play-video.png\">" +
+                    "<img width=\"32\" height=\"32\" src=\"https://prod-wutsi.s3.amazonaws.com/static/wutsi-blog-web/assets/wutsi/img/mail/play-video.png\">" +
                     "</div>" +
                     "</a>"
                 it.append(innerHtml)
