@@ -84,6 +84,7 @@ public class ShareDelegate(
                     contentType = "text/html",
                     sender = Sender(
                         userId = sender.id,
+                        fullName = sender.fullName
                     ),
                     recipient = Address(
                         email = follower.email!!,
