@@ -1,9 +1,10 @@
 package com.wutsi.newsletter.endpoint
 
-import com.wutsi.newsletter.delegate.ShareDelegate
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import com.wutsi.newsletter.`delegate`.ShareDelegate
+import org.springframework.web.bind.`annotation`.GetMapping
+import org.springframework.web.bind.`annotation`.RequestParam
+import org.springframework.web.bind.`annotation`.RestController
+import kotlin.Long
 
 @RestController
 public class ShareController(

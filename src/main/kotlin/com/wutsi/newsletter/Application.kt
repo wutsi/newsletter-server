@@ -1,9 +1,10 @@
 package com.wutsi.newsletter
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import kotlin.String
+import org.springframework.scheduling.annotation.EnableScheduling
 
 @SpringBootApplication
+@EnableScheduling
 public class Application
 
 public fun main(vararg args: String) {
