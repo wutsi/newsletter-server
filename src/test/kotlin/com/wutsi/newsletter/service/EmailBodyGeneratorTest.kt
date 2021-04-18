@@ -46,7 +46,7 @@ internal class EmailBodyGeneratorTest {
         val site = createSite()
         val scope = generator.scope(story, site, user, "Yo Man")
 
-        assertEquals("https://int-com-wutsi-track.herokuapp.com/mail/pixel/77.png?u=7&d=5&c=newsletter", scope["pixelUrl"])
+        assertEquals("https://www.wutsi.com/story/pixel/77.png?u=7&d=5&c=newsletter", scope["pixelUrl"])
         assertEquals("https://www.wutsi.com/read/77/sample-story", scope["storyUrl"])
         assertEquals("Sample Story", scope["title"])
         assertEquals("7 janv. 2020", scope["publishedDate"])

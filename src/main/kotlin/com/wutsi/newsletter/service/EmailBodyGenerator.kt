@@ -9,7 +9,6 @@ import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Entities.EscapeMode.extended
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service
 import java.io.InputStreamReader
@@ -22,8 +21,7 @@ import java.util.Locale
 class EmailBodyGenerator(
     @Autowired private val editorJSService: EditorJSService,
     @Autowired private val filters: FilterSet,
-    @Autowired private val messageSource: MessageSource,
-    @Value("\${wutsi.tracking-url}") private val trackingUrl: String
+    @Autowired private val messageSource: MessageSource
 ) {
     fun generate(story: Story, site: Site, user: User): String {
         val doc = editorJSService.fromJson(story.content)
@@ -55,7 +53,7 @@ class EmailBodyGenerator(
         val userUrl = "${site.websiteUrl}/@/${user.name}"
         val locale = locale(user)
         return mapOf(
-            "pixelUrl" to "$trackingUrl/mail/pixel/${story.id}.png?u=${user.id}&d=${story.readingMinutes}&c=${ShareDelegate.CAMPAIGN}",
+            "pixelUrl" to "${site.websiteUrl}/story/pixel/${story.id}.png?u=${user.id}&d=${story.readingMinutes}&c=${ShareDelegate.CAMPAIGN}",
             "storyUrl" to storyUrl,
             "title" to StringEscapeUtils.escapeHtml4(story.title),
             "publishedDate" to StringEscapeUtils.escapeHtml4(formatMediumDate(story.publishedDateTime, locale)),

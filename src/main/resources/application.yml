@@ -49,4 +49,3 @@ logging:
 
 wutsi:
   asset-url: "https://int-wutsi.s3.amazonaws.com/static/newsletter-server"
-  tracking-url: "https://int-com-wutsi-track.herokuapp.com"
