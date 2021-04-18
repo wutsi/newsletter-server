@@ -1,3 +1,3 @@
 - [Site Configuration](Configuration.md)
 - [Events](Event.md)
-- [API](https://wutsi.github.io/telegram-server/api/)
+- [API](https://wutsi.github.io/newsletter-server/api/)
