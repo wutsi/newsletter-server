@@ -56,7 +56,7 @@ class EmailBodyGenerator(
             "pixelUrl" to "${site.websiteUrl}/story/pixel/${story.id}.png?u=${user.id}&d=${story.readingMinutes}&c=${ShareDelegate.CAMPAIGN}",
             "storyUrl" to storyUrl,
             "title" to StringEscapeUtils.escapeHtml4(story.title),
-            "publishedDate" to StringEscapeUtils.escapeHtml4(formatMediumDate(story.publishedDateTime, locale)),
+            "publishedDate" to StringEscapeUtils.escapeHtml4(formatMediumDate(Date(story.publishedDateTime), locale)),
             "content" to content,
             "likeUrl" to "$storyUrl?like=1",
             "commentUrl" to "$storyUrl?comment=1",

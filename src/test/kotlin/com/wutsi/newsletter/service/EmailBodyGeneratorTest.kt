@@ -83,6 +83,6 @@ internal class EmailBodyGeneratorTest {
         userId = 11,
         siteId = 1,
         content = "This is the content",
-        publishedDateTime = SimpleDateFormat("yyyy-MM-dd").parse("2020-01-07")
+        publishedDateTime = SimpleDateFormat("yyyy-MM-dd").parse("2020-01-07").time
     )
 }
