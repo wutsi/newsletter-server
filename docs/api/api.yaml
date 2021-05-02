@@ -25,5 +25,14 @@ paths:
       responses:
         '200':
           description: Success
+      security:
+        - api_key:
+            - newsletter
       tags:
         - Newletter
+components:
+  securitySchemes:
+    api_key:
+      type: apiKey
+      in: header
+      name: Authorization
