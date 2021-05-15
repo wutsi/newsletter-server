@@ -1,9 +1,3 @@
-rabbitmq:
-  enabled: true
-security:
-  api-key:
-    id: ${API_KEY_ID}
-
 logging:
   pattern:
     console: "type=%level logger=%class{20} thread=%thread request_id=%X{request_id} client_id=%X{client_id} device_id=%X{device_id} :%m%n"
@@ -12,3 +6,8 @@ logging:
 wutsi:
   newsletter:
     asset-url: "https://prod-wutsi.s3.amazonaws.com/static/newsletter-server"
+  rabbitmq:
+    enabled: true
+  security:
+    api-key:
+      id: ${API_KEY_ID}

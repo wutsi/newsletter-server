@@ -5,9 +5,9 @@ import com.wutsi.email.dto.SendEmailRequest
 import com.wutsi.email.dto.Sender
 import com.wutsi.email.event.DeliverySubmittedEventPayload
 import com.wutsi.email.event.EmailEventType
-import com.wutsi.newsletter.SiteAttribute
 import com.wutsi.newsletter.service.EmailBodyGenerator
 import com.wutsi.site.SiteApi
+import com.wutsi.site.SiteAttribute
 import com.wutsi.site.dto.Site
 import com.wutsi.story.StoryApi
 import com.wutsi.story.dto.Story
@@ -98,5 +98,5 @@ public class ShareDelegate(
     }
 
     private fun enabled(site: Site): Boolean =
-        site.attributes.find { SiteAttribute.ENABLED.urn == it.urn }?.value == "true"
+        site.attributes.find { SiteAttribute.NEWSLETTER_ENABLED.urn == it.urn }?.value == "true"
 }

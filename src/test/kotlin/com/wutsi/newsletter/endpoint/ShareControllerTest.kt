@@ -9,9 +9,9 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.email.event.DeliverySubmittedEventPayload
 import com.wutsi.email.event.EmailEventType
-import com.wutsi.newsletter.SiteAttribute
 import com.wutsi.newsletter.delegate.ShareDelegate
 import com.wutsi.site.SiteApi
+import com.wutsi.site.SiteAttribute
 import com.wutsi.site.dto.Attribute
 import com.wutsi.site.dto.GetSiteResponse
 import com.wutsi.site.dto.Site
@@ -135,7 +135,7 @@ internal class ShareControllerTest : ControllerTestBase() {
 
     private fun createSite(
         attributes: List<Attribute> = listOf(
-            Attribute(SiteAttribute.ENABLED.urn, "true")
+            Attribute(SiteAttribute.NEWSLETTER_ENABLED.urn, "true")
         )
     ) = Site(
         id = 1L,
