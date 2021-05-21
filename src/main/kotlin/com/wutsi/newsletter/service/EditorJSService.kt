@@ -16,8 +16,12 @@ class EditorJSService(
     @Autowired private val jsonReader: EJSJsonReader,
     @Autowired private val jsonWriter: EJSJsonWriter
 ) {
-    fun fromJson(json: String?): EJSDocument =
-        if (json == null || json.isEmpty()) EJSDocument() else jsonReader.read(json)
+    fun fromJson(json: String?, summary: Boolean): EJSDocument {
+        if (json == null || json.isEmpty())
+            return EJSDocument()
+
+        return jsonReader.read(json, false)
+    }
 
     fun toJson(doc: EJSDocument): String {
         val json = StringWriter()

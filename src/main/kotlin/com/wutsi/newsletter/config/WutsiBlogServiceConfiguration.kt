@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-public class MQueueConfiguration(
+public class WutsiBlogServiceConfiguration(
     private val eventStream: EventStream
 ) {
     @Bean

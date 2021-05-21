@@ -31,7 +31,7 @@ public class ShareDelegate(
         const val CAMPAIGN = "newsletter"
     }
 
-    public fun invoke(storyId: Long) {
+    fun invoke(storyId: Long) {
         val story = storyApi.get(storyId).story
         val site = siteApi.get(story.siteId).site
         if (!enabled(site)) {
@@ -49,7 +49,7 @@ public class ShareDelegate(
         var offset = 0
         val limit = 100
         while (true) {
-            val followers = userApi.followers(story.userId, limit, offset).followers
+            val followers = userApi.followers(id = story.userId, limit = limit, offset = offset).followers
             followers.forEach {
                 try {
                     count += send(story, site, sender, it.followerUserId)

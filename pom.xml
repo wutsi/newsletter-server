@@ -34,10 +34,11 @@
     <klint.version>0.41.0</klint.version>
     <maven-antrun-plugin.version>3.0.0</maven-antrun-plugin.version>
     <mustache.version>0.9.7</mustache.version>
-    <wutsi-editorjs.version>1.18.0</wutsi-editorjs.version>
+    <wutsi-editorjs.version>1.19.1</wutsi-editorjs.version>
     <wutsi-platform.version>1.1.1</wutsi-platform.version>
-    <wutsi-story-sdk.version>0.11.0</wutsi-story-sdk.version>
-    <wutsi-user-sdk.version>1.4.0</wutsi-user-sdk.version>
+    <wutsi-story-sdk.version>0.13.0</wutsi-story-sdk.version>
+    <wutsi-subscription-sdk.version>1.1.3</wutsi-subscription-sdk.version>
+    <wutsi-user-sdk.version>1.9.0</wutsi-user-sdk.version>
   </properties>
 
   <dependencies>
@@ -45,6 +46,11 @@
       <groupId>com.wutsi</groupId>
       <artifactId>wutsi-editorjs</artifactId>
       <version>${wutsi-editorjs.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.wutsi.subscription</groupId>
+      <artifactId>subscription-sdk-kotlin</artifactId>
+      <version>${wutsi-subscription-sdk.version}</version>
     </dependency>
     <dependency>
       <groupId>com.wutsi.user</groupId>

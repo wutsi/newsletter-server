@@ -1,6 +1,7 @@
 package com.wutsi.newsletter.endpoint
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
@@ -65,7 +66,7 @@ internal class ShareControllerTest : ControllerTestBase() {
         val follower = createUser(2, "js@gmail.com", "John Smith")
         val followers = listOf(Follower(userId = user.id, followerUserId = follower.id))
         doReturn(GetUserResponse(follower)).whenever(userApi).get(2L)
-        doReturn(SearchFollowerResponse(followers)).whenever(userApi).followers(eq(1L), any(), any())
+        doReturn(SearchFollowerResponse(followers)).whenever(userApi).followers(eq(1L), anyOrNull(), any(), any())
 
         val url = "http://127.0.0.1:$port/v1/newsletter/share?story-id=1"
         get(url, Any::class.java)
@@ -95,7 +96,7 @@ internal class ShareControllerTest : ControllerTestBase() {
         val user = createUser(1)
         doReturn(GetUserResponse(user)).whenever(userApi).get(1L)
 
-        doReturn(SearchFollowerResponse(emptyList())).whenever(userApi).followers(eq(1L), any(), any())
+        doReturn(SearchFollowerResponse(emptyList())).whenever(userApi).followers(eq(1L), anyOrNull(), any(), any())
 
         val url = "http://127.0.0.1:$port/v1/newsletter/share?story-id=1"
         get(url, Any::class.java)

@@ -18,6 +18,16 @@
                 <tr>
                     <td class="wutsi-mail-content">{{{content}}}</td>
                 </tr>
+                {{#subscribe}}
+                <tr>
+                    <td align="center" class="box-highlight">
+                        <h3>{{{title}}}</h3>
+                        <p>
+                            <a class="btn-primary" href="{{{subscribeUrl}}}">{{{subscribeButton}}}</a>
+                        </p>
+                    </td>
+                </tr>
+                {{/subscribe}}
                 <tr>
                     <td>
                         <hr/>
