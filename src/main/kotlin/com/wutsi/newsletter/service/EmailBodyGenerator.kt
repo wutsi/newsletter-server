@@ -36,6 +36,8 @@ class EmailBodyGenerator(
         val fullAccess = hasFullAccess(story, user)
         val doc = editorJSService.fromJson(story.content, !fullAccess)
         val html = filter(editorJSService.toHtml(doc))
+
+        LOGGER.info("email=${user.email} story_id=${story.id} story_access=${story.access} full_access=$fullAccess")
         return merge(story, site, user, html, fullAccess)
     }
 
