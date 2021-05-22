@@ -20,7 +20,7 @@ class EditorJSService(
         if (json == null || json.isEmpty())
             return EJSDocument()
 
-        return jsonReader.read(json, false)
+        return jsonReader.read(json, summary)
     }
 
     fun toJson(doc: EJSDocument): String {
