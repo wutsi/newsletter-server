@@ -42,7 +42,7 @@ internal class EmailBodyGeneratorTest {
 
     @BeforeEach
     fun setUp() {
-        doReturn(SearchFollowerResponse()).whenever(userApi).followers(any(), any(), any(), any())
+        doReturn(SearchFollowerResponse()).whenever(userApi).searchFollowers(any(), any(), any(), any())
         doReturn(SearchSubscriptionResponse()).whenever(subscriptionApi).partnerSubscriptions(any(), any(), any())
     }
 
@@ -63,7 +63,7 @@ internal class EmailBodyGeneratorTest {
         val story =
             objectMapper.readValue(EmailBodyGenerator::class.java.getResourceAsStream("/story-subscriber.json"), GetStoryResponse::class.java).story
         val blog = createUser(story.userId, "Roger Milla", "roger.milla@gmail.com", name = "roger.milla")
-        doReturn(GetUserResponse(blog)).whenever(userApi).get(story.userId)
+        doReturn(GetUserResponse(blog)).whenever(userApi).getUser(story.userId)
 
         val user = createUser(7, "Ray Sponsible", "ray.sponsible@gmail.com")
         val site = createSite()
@@ -79,7 +79,7 @@ internal class EmailBodyGeneratorTest {
         val story =
             objectMapper.readValue(EmailBodyGenerator::class.java.getResourceAsStream("/story-premium.json"), GetStoryResponse::class.java).story
         val blog = createUser(story.userId, "Roger Milla", "roger.milla@gmail.com", name = "roger.milla")
-        doReturn(GetUserResponse(blog)).whenever(userApi).get(story.userId)
+        doReturn(GetUserResponse(blog)).whenever(userApi).getUser(story.userId)
 
         val user = createUser(7, "Ray Sponsible", "ray.sponsible@gmail.com")
         val site = createSite()
@@ -125,7 +125,7 @@ internal class EmailBodyGeneratorTest {
     fun `scope for story with SUBSCRIBER access`() {
         val story = createStory(77, 5, access = "SUBSCRIBER")
         val blog = createUser(story.userId, "Roger Milla", "roger.milla@gmail.com", name = "roger.milla")
-        doReturn(GetUserResponse(blog)).whenever(userApi).get(story.userId)
+        doReturn(GetUserResponse(blog)).whenever(userApi).getUser(story.userId)
 
         val user = createUser(7, "Ray Sponsible", "ray.sponsible@gmail.com")
         val site = createSite()
@@ -157,7 +157,7 @@ internal class EmailBodyGeneratorTest {
     fun `scope for story with PREMIUM_SUBSCRIBER access`() {
         val story = createStory(77, 5, access = "PREMIUM_SUBSCRIBER")
         val blog = createUser(story.userId, "Roger Milla", "roger.milla@gmail.com", name = "roger.milla")
-        doReturn(GetUserResponse(blog)).whenever(userApi).get(story.userId)
+        doReturn(GetUserResponse(blog)).whenever(userApi).getUser(story.userId)
 
         val user = createUser(7, "Ray Sponsible", "ray.sponsible@gmail.com")
         val site = createSite()

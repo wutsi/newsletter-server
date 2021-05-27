@@ -11,10 +11,9 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.email.event.DeliverySubmittedEventPayload
 import com.wutsi.email.event.EmailEventType
 import com.wutsi.newsletter.delegate.ShareDelegate
-import com.wutsi.site.SiteApi
+import com.wutsi.platform.site.SiteProvider
 import com.wutsi.site.SiteAttribute
 import com.wutsi.site.dto.Attribute
-import com.wutsi.site.dto.GetSiteResponse
 import com.wutsi.site.dto.Site
 import com.wutsi.story.StoryApi
 import com.wutsi.story.dto.GetStoryResponse
@@ -29,17 +28,16 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.web.server.LocalServerPort
-import org.springframework.test.annotation.DirtiesContext
+import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 internal class ShareControllerTest : ControllerTestBase() {
     @LocalServerPort
     private val port = 0
 
     @MockBean
-    private lateinit var siteApi: SiteApi
+    private lateinit var siteProvider: SiteProvider
 
     @MockBean
     private lateinit var storyApi: StoryApi
@@ -50,23 +48,28 @@ internal class ShareControllerTest : ControllerTestBase() {
     @MockBean
     private lateinit var eventStream: EventStream
 
+    @BeforeTest
+    override fun setUp() {
+        super.setUp()
+
+        val site = createSite()
+        doReturn(site).whenever(siteProvider).get(any())
+    }
+
     @Test
     fun `send to followers`() {
         login("newsletter")
 
-        val site = createSite()
-        doReturn(GetSiteResponse(site)).whenever(siteApi).get(1L)
-
         val story = createStory()
-        doReturn(GetStoryResponse(story)).whenever(storyApi).get(1L)
+        doReturn(GetStoryResponse(story)).whenever(storyApi).get(any())
 
         val user = createUser(1)
-        doReturn(GetUserResponse(user)).whenever(userApi).get(1L)
+        doReturn(GetUserResponse(user)).whenever(userApi).getUser(any())
 
         val follower = createUser(2, "js@gmail.com", "John Smith")
         val followers = listOf(Follower(userId = user.id, followerUserId = follower.id))
-        doReturn(GetUserResponse(follower)).whenever(userApi).get(2L)
-        doReturn(SearchFollowerResponse(followers)).whenever(userApi).followers(eq(1L), anyOrNull(), any(), any())
+        doReturn(GetUserResponse(follower)).whenever(userApi).getUser(2L)
+        doReturn(SearchFollowerResponse(followers)).whenever(userApi).searchFollowers(eq(1L), anyOrNull(), any(), any())
 
         val url = "http://127.0.0.1:$port/v1/newsletter/share?story-id=1"
         get(url, Any::class.java)
@@ -88,15 +91,10 @@ internal class ShareControllerTest : ControllerTestBase() {
         login("newsletter")
 
         val site = createSite(attributes = emptyList())
-        doReturn(GetSiteResponse(site)).whenever(siteApi).get(1L)
+        doReturn(site).whenever(siteProvider).get(any())
 
         val story = createStory()
-        doReturn(GetStoryResponse(story)).whenever(storyApi).get(1L)
-
-        val user = createUser(1)
-        doReturn(GetUserResponse(user)).whenever(userApi).get(1L)
-
-        doReturn(SearchFollowerResponse(emptyList())).whenever(userApi).followers(eq(1L), anyOrNull(), any(), any())
+        doReturn(GetStoryResponse(story)).whenever(storyApi).get(any())
 
         val url = "http://127.0.0.1:$port/v1/newsletter/share?story-id=1"
         get(url, Any::class.java)
@@ -108,11 +106,13 @@ internal class ShareControllerTest : ControllerTestBase() {
     fun `donot send to followers when user has no followers`() {
         login("newsletter")
 
-        val site = createSite(attributes = emptyList())
-        doReturn(GetSiteResponse(site)).whenever(siteApi).get(1L)
-
         val story = createStory()
-        doReturn(GetStoryResponse(story)).whenever(storyApi).get(1L)
+        doReturn(GetStoryResponse(story)).whenever(storyApi).get(any())
+
+        val user = createUser(1)
+        doReturn(GetUserResponse(user)).whenever(userApi).getUser(any())
+
+        doReturn(SearchFollowerResponse(emptyList())).whenever(userApi).searchFollowers(eq(1L), anyOrNull(), any(), any())
 
         val url = "http://127.0.0.1:$port/v1/newsletter/share?story-id=1"
         get(url, Any::class.java)
@@ -139,7 +139,7 @@ internal class ShareControllerTest : ControllerTestBase() {
             Attribute(SiteAttribute.NEWSLETTER_ENABLED.urn, "true")
         )
     ) = Site(
-        id = 1L,
+        id = 1,
         domainName = "www.wutsi.com",
         websiteUrl = "https://www.wutsi.com",
         attributes = attributes

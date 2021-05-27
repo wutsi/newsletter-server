@@ -62,7 +62,7 @@ class EmailBodyGenerator(
 
     private fun isFollowedBy(blogId: Long, userId: Long): Boolean {
         try {
-            return userApi.followers(
+            return userApi.searchFollowers(
                 id = blogId,
                 followerUserId = userId,
                 limit = 1,
@@ -122,7 +122,7 @@ class EmailBodyGenerator(
         if (fullAccess)
             return null
 
-        val blog = userApi.get(story.userId).user
+        val blog = userApi.getUser(story.userId).user
         return mapOf(
             "title" to messageSource.getMessage(
                 if (story.access == "SUBSCRIBER") "subscriber_title" else "premium_title",
