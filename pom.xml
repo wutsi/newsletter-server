@@ -33,7 +33,7 @@
     <kotlin-mockito.version>2.2.0</kotlin-mockito.version>
     <klint.version>0.41.0</klint.version>
     <maven-antrun-plugin.version>3.0.0</maven-antrun-plugin.version>
-    <mustache.version>0.9.7</mustache.version>
+    <mustache.version>0.9.10</mustache.version>
     <wutsi-editorjs.version>1.19.1</wutsi-editorjs.version>
     <wutsi-platform.version>1.1.7</wutsi-platform.version>
     <wutsi-story-sdk.version>0.13.0</wutsi-story-sdk.version>
