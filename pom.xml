@@ -37,7 +37,7 @@
     <wutsi-editorjs.version>1.19.1</wutsi-editorjs.version>
     <wutsi-platform.version>1.1.7</wutsi-platform.version>
     <wutsi-stats-sdk.version>1.2.1</wutsi-stats-sdk.version>
-    <wutsi-story-sdk.version>0.13.3-SNAPSHOT</wutsi-story-sdk.version>
+    <wutsi-story-sdk.version>0.13.3</wutsi-story-sdk.version>
     <wutsi-subscription-sdk.version>1.1.3</wutsi-subscription-sdk.version>
     <wutsi-user-sdk.version>1.9.2</wutsi-user-sdk.version>
   </properties>
