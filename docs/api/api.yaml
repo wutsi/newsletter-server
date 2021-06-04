@@ -30,6 +30,31 @@ paths:
             - newsletter
       tags:
         - Newletter
+  /v1/newsletter/digest:
+    get:
+      operationId: digest
+      summary: Send a new digest to all users
+      parameters:
+        - in: query
+          name: start-date
+          required: true
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: end-date
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Success
+      security:
+        - api_key:
+            - newsletter
+      tags:
+        - Newletter
 components:
   securitySchemes:
     api_key:
