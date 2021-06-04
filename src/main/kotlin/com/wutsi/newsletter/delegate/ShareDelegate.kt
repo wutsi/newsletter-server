@@ -5,7 +5,7 @@ import com.wutsi.email.dto.SendEmailRequest
 import com.wutsi.email.dto.Sender
 import com.wutsi.email.event.DeliverySubmittedEventPayload
 import com.wutsi.email.event.EmailEventType
-import com.wutsi.newsletter.service.EmailBodyGenerator
+import com.wutsi.newsletter.service.NewsletterEmailBodyGenerator
 import com.wutsi.platform.site.SiteProvider
 import com.wutsi.site.SiteAttribute
 import com.wutsi.site.dto.Site
@@ -14,6 +14,7 @@ import com.wutsi.story.dto.Story
 import com.wutsi.stream.EventStream
 import com.wutsi.user.UserApi
 import com.wutsi.user.dto.User
+import com.wutsi.user.dto.UserSummary
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -23,7 +24,7 @@ public class ShareDelegate(
     @Autowired private val siteProvider: SiteProvider,
     @Autowired private val storyApi: StoryApi,
     @Autowired private val userApi: UserApi,
-    @Autowired private val bodyGenerator: EmailBodyGenerator,
+    @Autowired private val bodyGenerator: NewsletterEmailBodyGenerator,
     @Autowired private val eventStream: EventStream
 ) {
     companion object {
@@ -90,12 +91,25 @@ public class ShareDelegate(
                         email = follower.email!!,
                         displayName = follower.fullName
                     ),
-                    body = bodyGenerator.generate(story, site, follower)
+                    body = bodyGenerator.generate(story, site, toUserSummary(follower))
                 )
             )
         )
         return 1
     }
+
+    private fun toUserSummary(user: User) = UserSummary(
+        id = user.id,
+        fullName = user.fullName,
+        email = user.email,
+        pictureUrl = user.pictureUrl,
+        siteId = user.siteId,
+        language = user.language,
+        name = user.name,
+        testUser = user.testUser,
+        followerCount = user.followerCount,
+        subscriberCount = user.subscriberCount
+    )
 
     private fun enabled(site: Site): Boolean =
         site.attributes.find { SiteAttribute.NEWSLETTER_ENABLED.urn == it.urn }?.value == "true"

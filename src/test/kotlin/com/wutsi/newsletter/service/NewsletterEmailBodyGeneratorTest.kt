@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
+import com.wutsi.newsletter.util.Html.sanitizeHtml
 import com.wutsi.site.dto.Site
 import com.wutsi.story.dto.GetStoryResponse
 import com.wutsi.story.dto.Story
@@ -13,6 +14,7 @@ import com.wutsi.user.UserApi
 import com.wutsi.user.dto.GetUserResponse
 import com.wutsi.user.dto.SearchFollowerResponse
 import com.wutsi.user.dto.User
+import com.wutsi.user.dto.UserSummary
 import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
@@ -27,9 +29,9 @@ import kotlin.test.assertNotNull
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-internal class EmailBodyGeneratorTest {
+internal class NewsletterEmailBodyGeneratorTest {
     @Autowired
-    private lateinit var generator: EmailBodyGenerator
+    private lateinit var generator: NewsletterEmailBodyGenerator
 
     @Autowired
     private lateinit var objectMapper: ObjectMapper
@@ -48,59 +50,55 @@ internal class EmailBodyGeneratorTest {
 
     @Test
     fun `generate email for Story with PUBLIC access`() {
-        val story = objectMapper.readValue(EmailBodyGenerator::class.java.getResourceAsStream("/story.json"), GetStoryResponse::class.java).story
-        val user = createUser(7, "Ray Sponsible", "ray.sponsible@gmail.com")
+        val story = objectMapper.readValue(NewsletterEmailBodyGenerator::class.java.getResourceAsStream("/story.json"), GetStoryResponse::class.java).story
+        val user = createUserSummary(7, "Ray Sponsible", "ray.sponsible@gmail.com")
         val site = createSite()
         val result = generator.generate(story, site, user)
 
         println(result)
-        val expected = IOUtils.toString(EmailBodyGenerator::class.java.getResourceAsStream("/story.html"), "utf-8")
+        val expected = IOUtils.toString(NewsletterEmailBodyGenerator::class.java.getResourceAsStream("/story.html"), "utf-8")
         assertEquals(sanitizeHtml(expected), sanitizeHtml(result))
     }
 
     @Test
     fun `generate email for Story with SUBSCRIBER access`() {
         val story =
-            objectMapper.readValue(EmailBodyGenerator::class.java.getResourceAsStream("/story-subscriber.json"), GetStoryResponse::class.java).story
+            objectMapper.readValue(
+                NewsletterEmailBodyGenerator::class.java.getResourceAsStream("/story-subscriber.json"),
+                GetStoryResponse::class.java
+            ).story
         val blog = createUser(story.userId, "Roger Milla", "roger.milla@gmail.com", name = "roger.milla")
         doReturn(GetUserResponse(blog)).whenever(userApi).getUser(story.userId)
 
-        val user = createUser(7, "Ray Sponsible", "ray.sponsible@gmail.com")
+        val user = createUserSummary(7, "Ray Sponsible", "ray.sponsible@gmail.com")
         val site = createSite()
         val result = generator.generate(story, site, user)
 
         println(result)
-        val expected = IOUtils.toString(EmailBodyGenerator::class.java.getResourceAsStream("/story-subscriber.html"), "utf-8")
+        val expected = IOUtils.toString(NewsletterEmailBodyGenerator::class.java.getResourceAsStream("/story-subscriber.html"), "utf-8")
         assertEquals(sanitizeHtml(expected), sanitizeHtml(result))
     }
 
     @Test
     fun `generate email for Story with PREMIUM_SUBSCRIBER access`() {
         val story =
-            objectMapper.readValue(EmailBodyGenerator::class.java.getResourceAsStream("/story-premium.json"), GetStoryResponse::class.java).story
+            objectMapper.readValue(NewsletterEmailBodyGenerator::class.java.getResourceAsStream("/story-premium.json"), GetStoryResponse::class.java).story
         val blog = createUser(story.userId, "Roger Milla", "roger.milla@gmail.com", name = "roger.milla")
         doReturn(GetUserResponse(blog)).whenever(userApi).getUser(story.userId)
 
-        val user = createUser(7, "Ray Sponsible", "ray.sponsible@gmail.com")
+        val user = createUserSummary(7, "Ray Sponsible", "ray.sponsible@gmail.com")
         val site = createSite()
         val result = generator.generate(story, site, user)
 
         println(result)
-        val expected = IOUtils.toString(EmailBodyGenerator::class.java.getResourceAsStream("/story-premium.html"), "utf-8")
+        val expected = IOUtils.toString(NewsletterEmailBodyGenerator::class.java.getResourceAsStream("/story-premium.html"), "utf-8")
         assertEquals(sanitizeHtml(expected), sanitizeHtml(result))
     }
-
-    private fun sanitizeHtml(html: String): String =
-        html.replace("\\s+".toRegex(), " ")
-            .replace(">\\s*".toRegex(), ">")
-            .replace("\\s*<".toRegex(), "<")
-            .trimIndent()
-            .trim()
 
     @Test
     fun `scope for story with PUBLIC access`() {
         val story = createStory(77, 5)
-        val user = createUser(7, "Ray Sponsible", "ray.sponsible@gmail.com")
+        val user = createUserSummary(7, "Ray Sponsible", "ray.sponsible@gmail.com")
         val site = createSite()
         val scope = generator.scope(story, site, user, "Yo Man", true)
 
@@ -127,7 +125,7 @@ internal class EmailBodyGeneratorTest {
         val blog = createUser(story.userId, "Roger Milla", "roger.milla@gmail.com", name = "roger.milla")
         doReturn(GetUserResponse(blog)).whenever(userApi).getUser(story.userId)
 
-        val user = createUser(7, "Ray Sponsible", "ray.sponsible@gmail.com")
+        val user = createUserSummary(7, "Ray Sponsible", "ray.sponsible@gmail.com")
         val site = createSite()
         val scope = generator.scope(story, site, user, "Yo Man", false)
 
@@ -159,7 +157,7 @@ internal class EmailBodyGeneratorTest {
         val blog = createUser(story.userId, "Roger Milla", "roger.milla@gmail.com", name = "roger.milla")
         doReturn(GetUserResponse(blog)).whenever(userApi).getUser(story.userId)
 
-        val user = createUser(7, "Ray Sponsible", "ray.sponsible@gmail.com")
+        val user = createUserSummary(7, "Ray Sponsible", "ray.sponsible@gmail.com")
         val site = createSite()
         val scope = generator.scope(story, site, user, "Yo Man", false)
 
@@ -190,6 +188,14 @@ internal class EmailBodyGeneratorTest {
         name = "wutsi.com",
         displayName = "Wutsi",
         websiteUrl = "https://www.wutsi.com"
+    )
+
+    private fun createUserSummary(id: Long, fullName: String, email: String, name: String = "ray.sponsible") = UserSummary(
+        id = id,
+        name = name,
+        fullName = fullName,
+        email = email,
+        language = "fr"
     )
 
     private fun createUser(id: Long, fullName: String, email: String, name: String = "ray.sponsible") = User(

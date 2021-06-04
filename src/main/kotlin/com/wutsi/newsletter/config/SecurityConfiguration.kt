@@ -53,7 +53,8 @@ public class SecurityConfiguration(
     public companion object {
         public val SECURED_ENDPOINTS: RequestMatcher =
             org.springframework.security.web.util.matcher.OrRequestMatcher(
-                org.springframework.security.web.util.matcher.AntPathRequestMatcher("/v1/newsletter/share", "GET")
+                org.springframework.security.web.util.matcher.AntPathRequestMatcher("/v1/newsletter/share", "GET"),
+                org.springframework.security.web.util.matcher.AntPathRequestMatcher("/v1/newsletter/digest", "GET")
             )
     }
 }

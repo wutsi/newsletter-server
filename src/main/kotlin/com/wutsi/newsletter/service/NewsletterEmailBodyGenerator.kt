@@ -6,7 +6,7 @@ import com.wutsi.site.dto.Site
 import com.wutsi.story.dto.Story
 import com.wutsi.subscription.SubscriptionApi
 import com.wutsi.user.UserApi
-import com.wutsi.user.dto.User
+import com.wutsi.user.dto.UserSummary
 import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Entities.EscapeMode.extended
@@ -21,7 +21,7 @@ import java.util.Date
 import java.util.Locale
 
 @Service
-class EmailBodyGenerator(
+class NewsletterEmailBodyGenerator(
     @Autowired private val editorJSService: EditorJSService,
     @Autowired private val filters: FilterSet,
     @Autowired private val messageSource: MessageSource,
@@ -29,17 +29,17 @@ class EmailBodyGenerator(
     @Autowired private val userApi: UserApi
 ) {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(EmailBodyGenerator::class.java)
+        private val LOGGER = LoggerFactory.getLogger(NewsletterEmailBodyGenerator::class.java)
     }
 
-    fun generate(story: Story, site: Site, user: User): String {
+    fun generate(story: Story, site: Site, user: UserSummary): String {
         val fullAccess = hasFullAccess(story, user)
         val doc = editorJSService.fromJson(story.content, !fullAccess)
         val html = filter(editorJSService.toHtml(doc))
         return merge(story, site, user, html, fullAccess)
     }
 
-    private fun hasFullAccess(story: Story, user: User): Boolean {
+    private fun hasFullAccess(story: Story, user: UserSummary): Boolean {
         if (story.access == "PREMIUM_SUBSCRIBER")
             return hasSubscription(story.userId, user.id)
 
@@ -76,8 +76,8 @@ class EmailBodyGenerator(
         }
     }
 
-    private fun merge(story: Story, site: Site, user: User, content: String, fullAccess: Boolean): String {
-        val reader = InputStreamReader(EmailBodyGenerator::class.java.getResourceAsStream("/templates/newsletter.html"))
+    private fun merge(story: Story, site: Site, user: UserSummary, content: String, fullAccess: Boolean): String {
+        val reader = InputStreamReader(NewsletterEmailBodyGenerator::class.java.getResourceAsStream("/templates/newsletter.html"))
         reader.use {
             val writer = StringWriter()
             writer.use {
@@ -95,7 +95,7 @@ class EmailBodyGenerator(
         }
     }
 
-    fun scope(story: Story, site: Site, user: User, content: String, fullAccess: Boolean): Map<String, Any?> {
+    fun scope(story: Story, site: Site, user: UserSummary, content: String, fullAccess: Boolean): Map<String, Any?> {
         val storyUrl = "${site.websiteUrl}${story.slug}"
         val userUrl = "${site.websiteUrl}/@/${user.name}"
         val locale = locale(user)
@@ -144,7 +144,7 @@ class EmailBodyGenerator(
     private fun formatMediumDate(date: Date, locale: Locale): String =
         SimpleDateFormat("d MMM yyyy", locale).format(date)
 
-    private fun locale(user: User): Locale =
+    private fun locale(user: UserSummary): Locale =
         if (user.language.isNullOrEmpty()) Locale("fr") else Locale(user.language)
 
     private fun filter(html: String): String {
