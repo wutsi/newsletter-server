@@ -64,7 +64,7 @@ public class DigestDelegate(
 
     private fun send(startDate: LocalDate, endDate: LocalDate, site: Site, stories: List<Story>, user: UserSummary): Int {
         if (user.email.isNullOrEmpty()) {
-            LOGGER.warn("User#${user.id} doesn't have an email")
+            LOGGER.warn("User#${user.name} doesn't have an email")
             return 0
         }
 
