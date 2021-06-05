@@ -17,8 +17,10 @@ import com.wutsi.site.dto.Site
 import com.wutsi.stats.StatsApi
 import com.wutsi.stats.dto.SearchViewResponse
 import com.wutsi.story.StoryApi
+import com.wutsi.story.dto.GetStoryResponse
 import com.wutsi.story.dto.SearchStoryResponse
 import com.wutsi.story.dto.Story
+import com.wutsi.story.dto.StorySummary
 import com.wutsi.stream.EventStream
 import com.wutsi.user.UserApi
 import com.wutsi.user.dto.SearchUserResponse
@@ -58,8 +60,10 @@ internal class DigestControllerTest : ControllerTestBase() {
         doReturn(SearchViewResponse()).whenever(statsApi)
             .views(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull())
 
-        val stories = listOf(createStory(), createStory())
+        val stories = listOf(createStorySummary(1, 1), createStorySummary(1, 2))
         doReturn(SearchStoryResponse(stories)).whenever(storyApi).published(any(), any(), any(), any())
+        doReturn(GetStoryResponse(createStory(1))).whenever(storyApi).get(1L)
+        doReturn(GetStoryResponse(createStory(2))).whenever(storyApi).get(2L)
 
         val users = listOf(createUser(1), createUser(2))
         doReturn(SearchUserResponse(users))
@@ -73,12 +77,19 @@ internal class DigestControllerTest : ControllerTestBase() {
         verify(eventStream, times(2)).publish(eq(DELIVERY_SUBMITTED.urn), payload.capture())
     }
 
-    private fun createStory(userId: Long = 1) = Story(
-        id = 123L,
+    private fun createStory(id: Long, userId: Long = 1) = Story(
+        id = id,
         userId = userId,
         title = "This is a story title",
         slug = "/read/123/this-is-a-story-title",
         content = "{}"
+    )
+
+    private fun createStorySummary(id: Long, userId: Long = 1) = StorySummary(
+        id = id,
+        userId = userId,
+        title = "This is a story title",
+        slug = "/read/123/this-is-a-story-title"
     )
 
     private fun createUser(id: Long = 1, fullName: String = "Ray Sponsible") = UserSummary(

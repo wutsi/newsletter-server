@@ -30,7 +30,7 @@ public class DigestDelegate(
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(DigestDelegate::class.java)
-        const val CAMPAIGN = "daily-digest"
+        const val CAMPAIGN = "digest"
     }
 
     fun invoke(startDate: LocalDate, endDate: LocalDate) {
@@ -39,8 +39,7 @@ public class DigestDelegate(
     }
 
     fun invoke(startDate: LocalDate, endDate: LocalDate, site: Site) {
-        val stories = storyApi.published(startDate, endDate, 10, 0).stories
-            .filter { it.siteId == site.id }
+        val stories = stories(startDate, endDate)
         if (stories.isEmpty()) {
             LOGGER.info("No story published from $startDate to $endDate")
             return
@@ -60,6 +59,19 @@ public class DigestDelegate(
             }
         }
         LOGGER.info("$count email(s) sent")
+    }
+
+    private fun stories(startDate: LocalDate, endDate: LocalDate): List<Story> {
+        val storyIds = storyApi.published(startDate, endDate, 10, 0).stories
+            .map { it.id }
+        return storyIds.map {
+            try {
+                storyApi.get(it).story
+            } catch (ex: Exception) {
+                LOGGER.warn("Unable to resolve Story#$it", ex)
+                null
+            }
+        }.filterNotNull()
     }
 
     private fun send(startDate: LocalDate, endDate: LocalDate, site: Site, stories: List<Story>, user: UserSummary): Int {
