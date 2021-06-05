@@ -2,57 +2,50 @@
 <table cellpadding="0" cellspacing="0" width="100%" border="0">
     <tr>
         <td>
-            <img width="1" height="1" src="{{{pixelUrl}}}"/>
-
-            <table cellpadding="0" cellspacing="10" width="100%" border="0">
-                <tr>
-                    <td>
-                        <h1>
-                            <a href="{{{storyUrl}}}">{{{title}}}</a>
-                        </h1>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="small">{{{publishedDate}}}</td>
-                </tr>
-                <tr>
-                    <td class="wutsi-mail-content">{{{content}}}</td>
-                </tr>
-                {{#subscribe}}
-                <tr>
-                    <td align="center">
-                        <div style="background: white; opacity: 50%; height: 5em; margin-top: -5em;">
-                        </div>
-                        <div class="box-highlight" style="padding: 2em">
-                            <h3>{{{title}}}</h3>
-                            <p>
-                                <a class="btn-primary" href="{{{subscribeUrl}}}">{{{subscribeButton}}}</a>
-                            </p>
-                        </div>
-                    </td>
-                </tr>
-                {{/subscribe}}
-                <tr>
-                    <td>
-                        <hr/>
-                        <a href="{{{likeUrl}}}"><img width="32" style="margin-right: 1em"
-                                                     src="https://prod-wutsi.s3.amazonaws.com/static/wutsi-blog-web/assets/wutsi/img/mail/like.png"/></a>
-                        <a href="{{{commentUrl}}}"><img width="32" style="margin-right: 1em"
-                                                        src="https://prod-wutsi.s3.amazonaws.com/static/wutsi-blog-web/assets/wutsi/img/mail/comment.png"/></a>
-                        <hr/>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="center">
-                        <p>
-                            <i>{{{shareText}}}</i>
-                        </p>
-                        <p>
-                            <a class="btn-primary" href="{{{shareUrl}}}">{{shareButton}}</a>
-                        </p>
-                    </td>
-                </tr>
-            </table>
+            <h1>
+                <a href="{{{storyUrl}}}">{{{title}}}</a>
+                <img width="1" height="1" src="{{{pixelUrl}}}"/>
+            </h1>
+        </td>
+    </tr>
+    <tr>
+        <td class="small">{{{publishedDate}}}</td>
+    </tr>
+    <tr>
+        <td class="wutsi-mail-content">{{{content}}}</td>
+    </tr>
+    {{#subscribe}}
+    <tr>
+        <td align="center">
+            <div style="background: white; opacity: 50%; height: 5em; margin-top: -5em;">
+            </div>
+            <div class="box-highlight" style="padding: 2em">
+                <h3>{{{title}}}</h3>
+                <p>
+                    <a class="btn-primary" href="{{{subscribeUrl}}}">{{{subscribeButton}}}</a>
+                </p>
+            </div>
+        </td>
+    </tr>
+    {{/subscribe}}
+    <tr>
+        <td>
+            <hr/>
+            <a href="{{{likeUrl}}}"><img width="32" style="margin-right: 1em"
+                                         src="https://prod-wutsi.s3.amazonaws.com/static/wutsi-blog-web/assets/wutsi/img/mail/like.png"/></a>
+            <a href="{{{commentUrl}}}"><img width="32" style="margin-right: 1em"
+                                            src="https://prod-wutsi.s3.amazonaws.com/static/wutsi-blog-web/assets/wutsi/img/mail/comment.png"/></a>
+            <hr/>
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+            <p>
+                <i>{{{shareText}}}</i>
+            </p>
+            <p>
+                <a class="btn-primary" href="{{{shareUrl}}}">{{shareButton}}</a>
+            </p>
         </td>
     </tr>
 </table>
