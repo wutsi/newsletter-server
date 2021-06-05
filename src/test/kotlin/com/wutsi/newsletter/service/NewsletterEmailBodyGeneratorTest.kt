@@ -17,7 +17,6 @@ import com.wutsi.user.dto.User
 import com.wutsi.user.dto.UserSummary
 import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,6 +25,7 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.annotation.DirtiesContext
 import java.text.SimpleDateFormat
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
@@ -102,20 +102,15 @@ internal class NewsletterEmailBodyGeneratorTest {
         val site = createSite()
         val scope = generator.scope(story, site, user, "Yo Man", true)
 
-        assertEquals(11, scope.size)
+        assertEquals(9, scope.size)
         assertEquals("https://www.wutsi.com/story/pixel/77.png?u=7&d=5&c=newsletter", scope["pixelUrl"])
         assertEquals("https://www.wutsi.com/read/77/sample-story", scope["storyUrl"])
         assertEquals("Sample Story", scope["title"])
         assertEquals("7 janv. 2020", scope["publishedDate"])
         assertEquals("Yo Man", scope["content"])
-        assertEquals("https://www.wutsi.com/read/77/sample-story?like=1", scope["likeUrl"])
-        assertEquals("https://www.wutsi.com/read/77/sample-story?comment=1", scope["commentUrl"])
-        assertEquals("https://www.wutsi.com/read/77/sample-story?share=1", scope["shareUrl"])
-        assertEquals(
-            "Si tu as aim&eacute; cette Storie de <a href=\"https://www.wutsi.com/@/ray.sponsible\">Ray Sponsible</a>, Pourquoi ne pas la partager?",
-            scope["shareText"]
-        )
-        assertEquals("Partage la Storie", scope["shareButton"])
+        assertEquals("https://www.facebook.com/sharer/sharer.php?display=page&u=https://www.wutsi.com/read/77/sample-story", scope["shareFacebookUrl"])
+        assertEquals("http://www.twitter.com/intent/tweet?url=https://www.wutsi.com/read/77/sample-story", scope["shareTwitterUrl"])
+        assertEquals("https://www.linkedin.com/shareArticle?mini=true&url=https://www.wutsi.com/read/77/sample-story", scope["shareLinkedinUrl"])
         assertNull(scope["subscribe"])
     }
 
@@ -129,20 +124,16 @@ internal class NewsletterEmailBodyGeneratorTest {
         val site = createSite()
         val scope = generator.scope(story, site, user, "Yo Man", false)
 
-        assertEquals(11, scope.size)
+        assertEquals(9, scope.size)
         assertEquals("https://www.wutsi.com/story/pixel/77.png?u=7&d=5&c=newsletter", scope["pixelUrl"])
         assertEquals("https://www.wutsi.com/read/77/sample-story", scope["storyUrl"])
         assertEquals("Sample Story", scope["title"])
         assertEquals("7 janv. 2020", scope["publishedDate"])
         assertEquals("Yo Man", scope["content"])
-        assertEquals("https://www.wutsi.com/read/77/sample-story?like=1", scope["likeUrl"])
-        assertEquals("https://www.wutsi.com/read/77/sample-story?comment=1", scope["commentUrl"])
-        assertEquals("https://www.wutsi.com/read/77/sample-story?share=1", scope["shareUrl"])
-        assertEquals(
-            "Si tu as aim&eacute; cette Storie de <a href=\"https://www.wutsi.com/@/ray.sponsible\">Ray Sponsible</a>, Pourquoi ne pas la partager?",
-            scope["shareText"]
-        )
-        assertEquals("Partage la Storie", scope["shareButton"])
+
+        assertEquals("https://www.facebook.com/sharer/sharer.php?display=page&u=https://www.wutsi.com/read/77/sample-story", scope["shareFacebookUrl"])
+        assertEquals("http://www.twitter.com/intent/tweet?url=https://www.wutsi.com/read/77/sample-story", scope["shareTwitterUrl"])
+        assertEquals("https://www.linkedin.com/shareArticle?mini=true&url=https://www.wutsi.com/read/77/sample-story", scope["shareLinkedinUrl"])
 
         val subscribe = scope["subscribe"] as Map<String, String>
         assertNotNull(subscribe)
@@ -161,20 +152,16 @@ internal class NewsletterEmailBodyGeneratorTest {
         val site = createSite()
         val scope = generator.scope(story, site, user, "Yo Man", false)
 
-        assertEquals(11, scope.size)
+        assertEquals(9, scope.size)
         assertEquals("https://www.wutsi.com/story/pixel/77.png?u=7&d=5&c=newsletter", scope["pixelUrl"])
         assertEquals("https://www.wutsi.com/read/77/sample-story", scope["storyUrl"])
         assertEquals("Sample Story", scope["title"])
         assertEquals("7 janv. 2020", scope["publishedDate"])
         assertEquals("Yo Man", scope["content"])
-        assertEquals("https://www.wutsi.com/read/77/sample-story?like=1", scope["likeUrl"])
-        assertEquals("https://www.wutsi.com/read/77/sample-story?comment=1", scope["commentUrl"])
-        assertEquals("https://www.wutsi.com/read/77/sample-story?share=1", scope["shareUrl"])
-        assertEquals(
-            "Si tu as aim&eacute; cette Storie de <a href=\"https://www.wutsi.com/@/ray.sponsible\">Ray Sponsible</a>, Pourquoi ne pas la partager?",
-            scope["shareText"]
-        )
-        assertEquals("Partage la Storie", scope["shareButton"])
+
+        assertEquals("https://www.facebook.com/sharer/sharer.php?display=page&u=https://www.wutsi.com/read/77/sample-story", scope["shareFacebookUrl"])
+        assertEquals("http://www.twitter.com/intent/tweet?url=https://www.wutsi.com/read/77/sample-story", scope["shareTwitterUrl"])
+        assertEquals("https://www.linkedin.com/shareArticle?mini=true&url=https://www.wutsi.com/read/77/sample-story", scope["shareLinkedinUrl"])
 
         val subscribe = scope["subscribe"] as Map<String, String>
         assertNotNull(subscribe)

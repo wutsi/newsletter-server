@@ -97,7 +97,6 @@ class NewsletterEmailBodyGenerator(
 
     fun scope(story: Story, site: Site, user: UserSummary, content: String, fullAccess: Boolean): Map<String, Any?> {
         val storyUrl = "${site.websiteUrl}${story.slug}"
-        val userUrl = "${site.websiteUrl}/@/${user.name}"
         val locale = locale(user)
         return mapOf(
             "pixelUrl" to "${site.websiteUrl}/story/pixel/${story.id}.png?u=${user.id}&d=${story.readingMinutes}&c=${ShareDelegate.CAMPAIGN}",
@@ -105,15 +104,9 @@ class NewsletterEmailBodyGenerator(
             "title" to StringEscapeUtils.escapeHtml4(story.title),
             "publishedDate" to StringEscapeUtils.escapeHtml4(formatMediumDate(Date(story.publishedDateTime), locale)),
             "content" to content,
-            "likeUrl" to "$storyUrl?like=1",
-            "commentUrl" to "$storyUrl?comment=1",
-            "shareUrl" to "$storyUrl?share=1",
-            "shareText" to messageSource.getMessage(
-                "share_text",
-                arrayOf(userUrl, StringEscapeUtils.escapeHtml4(user.fullName)),
-                locale
-            ),
-            "shareButton" to messageSource.getMessage("share_button", arrayOf(), locale),
+            "shareFacebookUrl" to "https://www.facebook.com/sharer/sharer.php?display=page&u=$storyUrl",
+            "shareTwitterUrl" to "http://www.twitter.com/intent/tweet?url=$storyUrl",
+            "shareLinkedinUrl" to "https://www.linkedin.com/shareArticle?mini=true&url=$storyUrl",
             "subscribe" to subscribeScope(fullAccess, story, site, locale)
         )
     }
