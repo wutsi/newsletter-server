@@ -67,7 +67,7 @@ internal class DigestEmailBodyGeneratorTest {
     fun `generate digest`() {
         doReturn("1")
             .doReturn("2")
-            .doReturn("3").whenever(newsletter).generate(any(), any(), any())
+            .doReturn("3").whenever(newsletter).generate(any(), any(), any(), any())
 
         val result = generator.generate(stories, site, user, LocalDate.now().minusDays(7), LocalDate.now())
 

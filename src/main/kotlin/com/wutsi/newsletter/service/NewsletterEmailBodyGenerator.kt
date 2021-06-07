@@ -1,7 +1,6 @@
 package com.wutsi.newsletter.service
 
 import com.github.mustachejava.DefaultMustacheFactory
-import com.wutsi.newsletter.delegate.ShareDelegate
 import com.wutsi.site.dto.Site
 import com.wutsi.story.dto.Story
 import com.wutsi.subscription.SubscriptionApi
@@ -26,17 +25,25 @@ class NewsletterEmailBodyGenerator(
     @Autowired private val filters: FilterSet,
     @Autowired private val messageSource: MessageSource,
     @Autowired private val subscriptionApi: SubscriptionApi,
-    @Autowired private val userApi: UserApi
+    @Autowired private val userApi: UserApi,
+    @Autowired private val trackingContext: TrackingContext
 ) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(NewsletterEmailBodyGenerator::class.java)
     }
 
-    fun generate(story: Story, site: Site, user: UserSummary): String {
+    fun generate(story: Story, site: Site, user: UserSummary, campaign: String): String {
         val fullAccess = hasFullAccess(story, user)
         val doc = editorJSService.fromJson(story.content, !fullAccess)
-        val html = filter(editorJSService.toHtml(doc))
-        return merge(story, site, user, html, fullAccess)
+        val html = filter(
+            html = editorJSService.toHtml(doc),
+            context = FilterContext(
+                site = site,
+                user = user,
+                campaign = campaign
+            )
+        )
+        return merge(story, site, user, html, fullAccess, campaign)
     }
 
     private fun hasFullAccess(story: Story, user: UserSummary): Boolean {
@@ -76,13 +83,13 @@ class NewsletterEmailBodyGenerator(
         }
     }
 
-    private fun merge(story: Story, site: Site, user: UserSummary, content: String, fullAccess: Boolean): String {
+    private fun merge(story: Story, site: Site, user: UserSummary, content: String, fullAccess: Boolean, campaign: String): String {
         val reader = InputStreamReader(NewsletterEmailBodyGenerator::class.java.getResourceAsStream("/templates/newsletter.html"))
         reader.use {
             val writer = StringWriter()
             writer.use {
                 val mustache = DefaultMustacheFactory().compile(reader, "text")
-                val scope = scope(story, site, user, content, fullAccess)
+                val scope = scope(story, site, user, content, fullAccess, campaign)
                 mustache.execute(
                     writer,
                     mapOf(
@@ -95,11 +102,16 @@ class NewsletterEmailBodyGenerator(
         }
     }
 
-    fun scope(story: Story, site: Site, user: UserSummary, content: String, fullAccess: Boolean): Map<String, Any?> {
+    fun scope(story: Story, site: Site, user: UserSummary, content: String, fullAccess: Boolean, campaign: String): Map<String, Any?> {
         val storyUrl = "${site.websiteUrl}${story.slug}"
         val locale = locale(user)
         return mapOf(
-            "pixelUrl" to "${site.websiteUrl}/story/pixel/${story.id}.png?u=${user.id}&d=${story.readingMinutes}&c=${ShareDelegate.CAMPAIGN}",
+            "pixelUrl" to "${site.websiteUrl}/mail/track/${story.id}.png" +
+                "?u=${user.id}" +
+                "&d=${story.readingMinutes}" +
+                "&c=$campaign" +
+                "&hid=${trackingContext.hitId(user)}" +
+                "&did=${trackingContext.deviceId(user)}",
             "storyUrl" to storyUrl,
             "title" to StringEscapeUtils.escapeHtml4(story.title),
             "publishedDate" to StringEscapeUtils.escapeHtml4(formatMediumDate(Date(story.publishedDateTime), locale)),
@@ -140,8 +152,8 @@ class NewsletterEmailBodyGenerator(
     private fun locale(user: UserSummary): Locale =
         if (user.language.isNullOrEmpty()) Locale("fr") else Locale(user.language)
 
-    private fun filter(html: String): String {
-        val doc = filters.filter(Jsoup.parse(html))
+    private fun filter(html: String, context: FilterContext): String {
+        val doc = filters.filter(Jsoup.parse(html), context)
         doc.outputSettings()
             .charset("ASCII")
             .escapeMode(extended)

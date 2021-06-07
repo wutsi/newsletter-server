@@ -1,6 +1,7 @@
 package com.wutsi.newsletter.service.filter
 
 import com.wutsi.newsletter.service.Filter
+import com.wutsi.newsletter.service.FilterContext
 import org.jsoup.nodes.Document
 
 class YouTubeFilter : Filter {
@@ -16,7 +17,7 @@ class YouTubeFilter : Filter {
             "padding: 2px"
     }
 
-    override fun filter(doc: Document): Document {
+    override fun filter(doc: Document, context: FilterContext): Document {
         doc.select(".youtube")
             .forEach {
                 it.attr("style", STYLE_CONTAINER)

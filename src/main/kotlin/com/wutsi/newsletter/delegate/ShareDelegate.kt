@@ -91,7 +91,7 @@ public class ShareDelegate(
                         email = follower.email!!,
                         displayName = follower.fullName
                     ),
-                    body = bodyGenerator.generate(story, site, toUserSummary(follower))
+                    body = bodyGenerator.generate(story, site, toUserSummary(follower), ShareDelegate.CAMPAIGN)
                 )
             )
         )

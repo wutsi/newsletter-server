@@ -4,6 +4,7 @@ import com.wutsi.newsletter.service.filter.BlockquoteFilter
 import com.wutsi.newsletter.service.filter.ButtonFilter
 import com.wutsi.newsletter.service.filter.FontFilter
 import com.wutsi.newsletter.service.filter.HrFilter
+import com.wutsi.newsletter.service.filter.HrefFilter
 import com.wutsi.newsletter.service.filter.ImageFilter
 import com.wutsi.newsletter.service.filter.LinkToolFilter
 import com.wutsi.newsletter.service.filter.PreFilter
@@ -23,7 +24,7 @@ class FilterSetTest {
 
     @Test
     fun validate() {
-        assertEquals(8, filterSet.filters.size)
+        assertEquals(9, filterSet.filters.size)
         assertTrue(filterSet.filters[0] is BlockquoteFilter)
         assertTrue(filterSet.filters[1] is ImageFilter)
         assertTrue(filterSet.filters[2] is HrFilter)
@@ -31,6 +32,7 @@ class FilterSetTest {
         assertTrue(filterSet.filters[4] is PreFilter)
         assertTrue(filterSet.filters[5] is YouTubeFilter)
         assertTrue(filterSet.filters[6] is ButtonFilter)
-        assertTrue(filterSet.filters[7] is FontFilter)
+        assertTrue(filterSet.filters[7] is HrefFilter)
+        assertTrue(filterSet.filters[8] is FontFilter)
     }
 }

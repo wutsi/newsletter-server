@@ -1,6 +1,7 @@
 package com.wutsi.newsletter.service.filter
 
 import com.wutsi.newsletter.service.Filter
+import com.wutsi.newsletter.service.FilterContext
 import org.jsoup.nodes.Document
 
 class BlockquoteFilter : Filter {
@@ -15,7 +16,7 @@ class BlockquoteFilter : Filter {
             "width: 100%;"
     }
 
-    override fun filter(doc: Document): Document {
+    override fun filter(doc: Document, context: FilterContext): Document {
         doc.select("blockquote p")
             .forEach {
                 it.attr("style", PARAGRAPH_STYLE)

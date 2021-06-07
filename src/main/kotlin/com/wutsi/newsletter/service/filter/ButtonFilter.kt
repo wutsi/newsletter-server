@@ -1,6 +1,7 @@
 package com.wutsi.newsletter.service.filter
 
 import com.wutsi.newsletter.service.Filter
+import com.wutsi.newsletter.service.FilterContext
 import org.jsoup.nodes.Document
 
 class ButtonFilter : Filter {
@@ -19,7 +20,7 @@ class ButtonFilter : Filter {
             " text-decoration: none"
     }
 
-    override fun filter(doc: Document): Document {
+    override fun filter(doc: Document, context: FilterContext): Document {
         doc.select("div.button")
             .forEach {
                 it.attr("style", DIV_STYLE)

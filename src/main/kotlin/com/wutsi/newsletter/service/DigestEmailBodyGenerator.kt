@@ -1,6 +1,7 @@
 package com.wutsi.newsletter.service
 
 import com.github.mustachejava.DefaultMustacheFactory
+import com.wutsi.newsletter.delegate.DigestDelegate
 import com.wutsi.site.dto.Site
 import com.wutsi.stats.StatsApi
 import com.wutsi.story.dto.Story
@@ -59,7 +60,8 @@ class DigestEmailBodyGenerator(
                     "content" to newsletter.generate(
                         story = it,
                         site = site,
-                        user = user
+                        user = user,
+                        DigestDelegate.CAMPAIGN
                     )
                 )
             }

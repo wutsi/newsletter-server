@@ -1,10 +1,12 @@
 package com.wutsi.newsletter.service.filter
 
+import com.wutsi.newsletter.service.FilterContext
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class FontFilterTest {
+    val context = FilterContext()
     val filter = FontFilter()
     val doc = Jsoup.parse(
         "<html><body class=\"wutsi-mail-content\">" +
@@ -28,7 +30,7 @@ class FontFilterTest {
 
     @Test
     fun filter() {
-        val result = filter.filter(doc).html()
+        val result = filter.filter(doc, context).html()
         assertEquals(
             "<html>\n" +
                 " <head></head>\n" +

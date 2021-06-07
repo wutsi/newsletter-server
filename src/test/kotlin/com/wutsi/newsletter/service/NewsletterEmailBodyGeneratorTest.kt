@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
+import com.wutsi.newsletter.delegate.ShareDelegate
 import com.wutsi.newsletter.util.Html.sanitizeHtml
 import com.wutsi.site.dto.Site
 import com.wutsi.story.dto.GetStoryResponse
@@ -30,6 +31,11 @@ import kotlin.test.assertNull
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 internal class NewsletterEmailBodyGeneratorTest {
+    companion object {
+        const val HIT_ID = "1111"
+        const val DEVICE_ID = "2222"
+    }
+
     @Autowired
     private lateinit var generator: NewsletterEmailBodyGenerator
 
@@ -42,10 +48,16 @@ internal class NewsletterEmailBodyGeneratorTest {
     @MockBean
     private lateinit var userApi: UserApi
 
+    @MockBean
+    private lateinit var trackingContext: TrackingContext
+
     @BeforeEach
     fun setUp() {
         doReturn(SearchFollowerResponse()).whenever(userApi).searchFollowers(any(), any(), any(), any())
         doReturn(SearchSubscriptionResponse()).whenever(subscriptionApi).partnerSubscriptions(any(), any(), any())
+
+        doReturn(HIT_ID).whenever(trackingContext).hitId(any())
+        doReturn(DEVICE_ID).whenever(trackingContext).deviceId(any())
     }
 
     @Test
@@ -53,7 +65,7 @@ internal class NewsletterEmailBodyGeneratorTest {
         val story = objectMapper.readValue(NewsletterEmailBodyGenerator::class.java.getResourceAsStream("/story.json"), GetStoryResponse::class.java).story
         val user = createUserSummary(7, "Ray Sponsible", "ray.sponsible@gmail.com")
         val site = createSite()
-        val result = generator.generate(story, site, user)
+        val result = generator.generate(story, site, user, ShareDelegate.CAMPAIGN)
 
         println(result)
         val expected = IOUtils.toString(NewsletterEmailBodyGenerator::class.java.getResourceAsStream("/story.html"), "utf-8")
@@ -72,7 +84,7 @@ internal class NewsletterEmailBodyGeneratorTest {
 
         val user = createUserSummary(7, "Ray Sponsible", "ray.sponsible@gmail.com")
         val site = createSite()
-        val result = generator.generate(story, site, user)
+        val result = generator.generate(story, site, user, ShareDelegate.CAMPAIGN)
 
         println(result)
         val expected = IOUtils.toString(NewsletterEmailBodyGenerator::class.java.getResourceAsStream("/story-subscriber.html"), "utf-8")
@@ -88,7 +100,7 @@ internal class NewsletterEmailBodyGeneratorTest {
 
         val user = createUserSummary(7, "Ray Sponsible", "ray.sponsible@gmail.com")
         val site = createSite()
-        val result = generator.generate(story, site, user)
+        val result = generator.generate(story, site, user, ShareDelegate.CAMPAIGN)
 
         println(result)
         val expected = IOUtils.toString(NewsletterEmailBodyGenerator::class.java.getResourceAsStream("/story-premium.html"), "utf-8")
@@ -100,10 +112,10 @@ internal class NewsletterEmailBodyGeneratorTest {
         val story = createStory(77, 5)
         val user = createUserSummary(7, "Ray Sponsible", "ray.sponsible@gmail.com")
         val site = createSite()
-        val scope = generator.scope(story, site, user, "Yo Man", true)
+        val scope = generator.scope(story, site, user, "Yo Man", true, ShareDelegate.CAMPAIGN)
 
         assertEquals(9, scope.size)
-        assertEquals("https://www.wutsi.com/story/pixel/77.png?u=7&d=5&c=newsletter", scope["pixelUrl"])
+        assertEquals("https://www.wutsi.com/mail/track/77.png?u=7&d=5&c=newsletter&hid=$HIT_ID&did=$DEVICE_ID", scope["pixelUrl"])
         assertEquals("https://www.wutsi.com/read/77/sample-story", scope["storyUrl"])
         assertEquals("Sample Story", scope["title"])
         assertEquals("7 janv. 2020", scope["publishedDate"])
@@ -122,10 +134,10 @@ internal class NewsletterEmailBodyGeneratorTest {
 
         val user = createUserSummary(7, "Ray Sponsible", "ray.sponsible@gmail.com")
         val site = createSite()
-        val scope = generator.scope(story, site, user, "Yo Man", false)
+        val scope = generator.scope(story, site, user, "Yo Man", false, ShareDelegate.CAMPAIGN)
 
         assertEquals(9, scope.size)
-        assertEquals("https://www.wutsi.com/story/pixel/77.png?u=7&d=5&c=newsletter", scope["pixelUrl"])
+        assertEquals("https://www.wutsi.com/mail/track/77.png?u=7&d=5&c=newsletter&hid=$HIT_ID&did=$DEVICE_ID", scope["pixelUrl"])
         assertEquals("https://www.wutsi.com/read/77/sample-story", scope["storyUrl"])
         assertEquals("Sample Story", scope["title"])
         assertEquals("7 janv. 2020", scope["publishedDate"])
@@ -150,10 +162,10 @@ internal class NewsletterEmailBodyGeneratorTest {
 
         val user = createUserSummary(7, "Ray Sponsible", "ray.sponsible@gmail.com")
         val site = createSite()
-        val scope = generator.scope(story, site, user, "Yo Man", false)
+        val scope = generator.scope(story, site, user, "Yo Man", false, ShareDelegate.CAMPAIGN)
 
         assertEquals(9, scope.size)
-        assertEquals("https://www.wutsi.com/story/pixel/77.png?u=7&d=5&c=newsletter", scope["pixelUrl"])
+        assertEquals("https://www.wutsi.com/mail/track/77.png?u=7&d=5&c=newsletter&hid=$HIT_ID&did=$DEVICE_ID", scope["pixelUrl"])
         assertEquals("https://www.wutsi.com/read/77/sample-story", scope["storyUrl"])
         assertEquals("Sample Story", scope["title"])
         assertEquals("7 janv. 2020", scope["publishedDate"])

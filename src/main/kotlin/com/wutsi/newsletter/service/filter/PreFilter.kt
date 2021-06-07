@@ -1,6 +1,7 @@
 package com.wutsi.newsletter.service.filter
 
 import com.wutsi.newsletter.service.Filter
+import com.wutsi.newsletter.service.FilterContext
 import org.jsoup.nodes.Document
 
 class PreFilter : Filter {
@@ -11,7 +12,7 @@ class PreFilter : Filter {
             "padding: 1em;"
     }
 
-    override fun filter(doc: Document): Document {
+    override fun filter(doc: Document, context: FilterContext): Document {
         doc.select("pre")
             .forEach {
                 it.attr("style", STYLE)
