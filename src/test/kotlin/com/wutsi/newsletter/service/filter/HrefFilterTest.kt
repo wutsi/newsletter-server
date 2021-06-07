@@ -38,8 +38,7 @@ internal class HrefFilterTest {
                 " <head></head>\n" +
                 " <body class=\"wutsi-mail-content\">\n" +
                 "  <a href=\"http://www.wutsi.com/mail/track/link?u=777&amp;c=XxX&amp;hid=222&amp;did=111&amp;url=https://wwww.google.com\">Google</a> \n" +
-                "  <h1>Section1</h1> \n" +
-                "  <a name=\"foo\"></a> \n" +
+                "  <h1>Section1</h1> <a name=\"foo\"></a> \n" +
                 " </body>\n" +
                 "</html>",
             result

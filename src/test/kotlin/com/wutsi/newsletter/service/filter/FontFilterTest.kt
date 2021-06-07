@@ -44,8 +44,7 @@ class FontFilterTest {
                 "  <figure>\n" +
                 "   <img src=\"1.ong\">\n" +
                 "   <p style=\"font-family: 'PT Sans', sans-serif;;\">Hellow world</p>\n" +
-                "   <hr>\n" +
-                "   <a class=\"link-tool\" href=\"https://wwww.foo.com\"> \n" +
+                "   <hr><a class=\"link-tool\" href=\"https://wwww.foo.com\"> \n" +
                 "    <div class=\"link-tool\" style=\"font-family: 'PT Sans', sans-serif;;\"> \n" +
                 "     <div class=\"meta\" style=\"font-family: 'PT Sans', sans-serif;;\">\n" +
                 "      Description\n" +
