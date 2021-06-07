@@ -3,11 +3,17 @@
     <tr>
         <td>
             {{{ greetings }}}
+            <ul>
+                {{#stories}}
+                <li><a href="#{{{anchor}}}">{{title}}</a></li>
+                {{/stories}}
+            </ul>
         </td>
     </tr>
     {{#stories}}
     <tr>
         <td class="border-top">
+            <a name="{{{anchor}}}"></a>
             {{{ content }}}
         </td>
     </tr>

@@ -35,6 +35,7 @@
     <maven-antrun-plugin.version>3.0.0</maven-antrun-plugin.version>
     <mustache.version>0.9.10</mustache.version>
     <wutsi-editorjs.version>1.19.1</wutsi-editorjs.version>
+    <wutsi-newsletter-sdk.version>1.1.0-SNAPSHOT</wutsi-newsletter-sdk.version>
     <wutsi-platform.version>1.1.7</wutsi-platform.version>
     <wutsi-stats-sdk.version>1.2.1</wutsi-stats-sdk.version>
     <wutsi-story-sdk.version>0.13.4</wutsi-story-sdk.version>
@@ -48,6 +49,11 @@
       <groupId>com.wutsi</groupId>
       <artifactId>wutsi-editorjs</artifactId>
       <version>${wutsi-editorjs.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.wutsi.newsletter</groupId>
+      <artifactId>newsletter-sdk-kotlin</artifactId>
+      <version>${wutsi-newsletter-sdk.version}</version>
     </dependency>
     <dependency>
       <groupId>com.wutsi.stats</groupId>

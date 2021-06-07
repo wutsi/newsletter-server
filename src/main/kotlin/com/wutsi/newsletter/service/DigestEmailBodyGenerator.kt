@@ -53,6 +53,9 @@ class DigestEmailBodyGenerator(
             "greetings" to messageSource.getMessage("digest_greetings", arrayOf(user.fullName), locale),
             "stories" to stories.map {
                 mapOf(
+                    "anchor" to "a_${it.id}",
+                    "title" to it.title,
+                    "url" to "${site.websiteUrl}${it.slug}",
                     "content" to newsletter.generate(
                         story = it,
                         site = site,
